@@ -21,7 +21,7 @@
 		self.title = @"MWPhotoBrowser";
         
         // Clear cache for testing
-        [[SDImageCache sharedImageCache] clearDisk];
+        [[SDImageCache sharedImageCache] clearDiskOnCompletion:NULL];
         [[SDImageCache sharedImageCache] clearMemory];
         
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Push", @"Modal", nil]];
@@ -263,7 +263,7 @@
         }
 		case 5:
             // Photos
-			[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3567/3523321514_371d9ac42f_b.jpg"]]];
+			[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"https://ae01.alicdn.com/kf/HTB1XtQRkol7MKJjSZFDq6yOEpXaz.jpg?size=149372&height=613&width=900&hash=6dcbf6cb4fa5092669f006608c26ede5"]]];
 			[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3629/3339128908_7aecabc34b_b.jpg"]]];
 			[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3364/3338617424_7ff836d55f_b.jpg"]]];
 			[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3590/3329114220_5fbc5bc92b_b.jpg"]]];
@@ -278,7 +278,7 @@
 			break;
 		case 6:
             // Photos & thumbs
-            photo = [MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3779/9522424255_28a5a9d99c_b.jpg"]];
+            photo = [MWPhoto photoWithURL:[NSURL URLWithString:@"https://ae01.alicdn.com/kf/HTB1XtQRkol7MKJjSZFDq6yOEpXaz.jpg?size=149372&height=613&width=900&hash=6dcbf6cb4fa5092669f006608c26ede5"]];
             photo.caption = @"Tube";
             [photos addObject:photo];
             [thumbs addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3779/9522424255_28a5a9d99c_q.jpg"]]];
@@ -1274,7 +1274,9 @@
                 [_assets addObject:obj];
             }];
             if (fetchResults.count > 0) {
-                [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                });
             }
         });
         
